@@ -171,6 +171,28 @@ def setup_db
       t.timestamps
     end
 
+    create_table :paranoid_belongs_to_polymorphics do |t|
+       t.string :name
+       t.string :parent_type
+       t.integer :parent_id
+       t.datetime :deleted_at
+
+       t.timestamps
+     end
+
+     create_table :not_paranoid_has_many_as_parents do |t|
+       t.string :name
+
+       t.timestamps
+     end
+
+     create_table :paranoid_has_many_as_parents do |t|
+       t.string :name
+       t.datetime :deleted_at
+
+       t.timestamps
+     end
+
     create_table :paranoid_androids do |t|
       t.datetime :deleted_at
     end
@@ -362,6 +384,20 @@ end
 class ParanoidWithScopedValidation < ActiveRecord::Base
   acts_as_paranoid
   validates_uniqueness_of :name, :scope => :category
+end
+
+class ParanoidBelongsToPolymorphic < ActiveRecord::Base
+  acts_as_paranoid
+  belongs_to :parent, :polymorphic => true, :with_deleted => true
+end
+
+class NotParanoidHasManyAsParent < ActiveRecord::Base
+  has_many :paranoid_belongs_to_polymorphics, :as => :parent, :dependent => :destroy
+end
+
+class ParanoidHasManyAsParent < ActiveRecord::Base
+  acts_as_paranoid
+  has_many :paranoid_belongs_to_polymorphics, :as => :parent, :dependent => :destroy
 end
 
 ParanoidWithCallback.add_observer(ParanoidObserver.instance)

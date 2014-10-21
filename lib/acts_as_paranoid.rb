@@ -3,6 +3,7 @@ require 'acts_as_paranoid/associations'
 require 'acts_as_paranoid/validations'
 require 'acts_as_paranoid/relation'
 require 'acts_as_paranoid/join_association'
+require 'acts_as_paranoid/preloader_association'
 
 module ActsAsParanoid
 
@@ -57,5 +58,8 @@ ActiveRecord::Relation.send :include, ActsAsParanoid::Relation
 # Push the recover callback onto the activerecord callback list
 ActiveRecord::Callbacks::CALLBACKS.push(:before_recover, :after_recover)
 
- # Must included after extend ActsAsParanoid
+ # Add join constraint to joins, Must be included after extend ActsAsParanoid
 ActiveRecord::Associations::JoinDependency::JoinAssociation.send :include, ActsAsParanoid::JoinAssociation
+
+# Use with_deleted in preloader build_scope
+ActiveRecord::Associations::Preloader::Association.send :include, ActsAsParanoid::PreloaderAssociation
