@@ -13,7 +13,7 @@ module ActsAsParanoid
     def build_constraint_with_deleted(reflection, table, key, foreign_table, foreign_key)
       constraint = build_constraint_without_deleted(reflection, table, key, foreign_table, foreign_key)
 
-      if reflection.klass.paranoid?
+      if reflection.klass.paranoid? && !reflection.options[:with_deleted]
         constraint = constraint.and(table[reflection.klass.paranoid_column].eq(nil))
       end
       constraint

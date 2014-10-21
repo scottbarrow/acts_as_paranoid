@@ -50,6 +50,13 @@ class AssociationsTest < ParanoidBaseTest
     assert ParanoidHasManyDependant.joins(:paranoid_time) == [paranoid_one_many], "belongs_to should only contain the #{paranoid_one_many.inspect} record"
   end
 
+  def test_joins_belongs_to_association_with_deleted
+    paranoid_time = ParanoidTime.new name: "deleted paranoid_time", deleted_at: Time.now
+    paranoid_time.build_has_one_not_paranoid
+    paranoid_time.save
+    assert_not_nil HasOneNotParanoid.joins(:paranoid_time).first.paranoid_time
+  end
+
   def test_belongs_to_with_deleted
     paranoid_time = ParanoidTime.first
     paranoid_has_many_dependant = paranoid_time.paranoid_has_many_dependants.create(:name => 'dependant!')
