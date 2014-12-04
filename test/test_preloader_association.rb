@@ -2,7 +2,6 @@ require 'test_helper'
 
 class PreloaderAssociationTest < ParanoidBaseTest
   def test_includes_with_deleted
-    binding.pry
     paranoid_time = ParanoidTime.first
     paranoid_has_many_dependant = paranoid_time.paranoid_has_many_dependants.create(:name => 'dependant!')
 
